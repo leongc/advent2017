@@ -38,3 +38,41 @@ const day2input = [
 "1165	1119	194	280	223	1181	267	898	1108	124	618	1135	817	997	129	227",
 "404	1757	358	2293	2626	87	613	95	1658	147	75	930	2394	2349	86	385",
 ];
+
+function linediff(s) {
+  var vals = s.split('\t');
+  if (vals.length == 0) {
+    return 0;
+  }
+  var mi = parseInt(vals[0]);
+  var ma = mi;
+  for (var i = 1; i < vals.length; i++) {
+    var v = parseInt(vals[i]);
+    if (v < mi) {
+      mi = v;
+    }
+    if (v > ma) {
+      ma = v;
+    }
+  }
+  return ma - mi;
+}
+
+linediff("5	1	9	5") == 8;
+linediff("7	5	3") == 4;
+linediff("2	4	6	8") == 6;
+
+function checksum(input) {
+  var result = 0;
+  for (var i = 0; i < input.length; i++) {
+    result += linediff(input[i]);
+  }
+  return result;
+}
+
+checksum(["5	1	9	5",
+  "7	5	3",
+  "2	4	6	8",
+  ]) == 18;
+
+checksum(day2input) == 21845;
