@@ -557,3 +557,46 @@ function count_valid(input) {
   return valid;
 }
 count_valid(day4input);
+
+/*
+--- Part Two ---
+For added security, yet another system policy has been put in place. Now, a valid passphrase must contain no two words that are anagrams of each other - that is, a passphrase is invalid if any word's letters can be rearranged to form any other word in the passphrase.
+
+For example:
+
+abcde fghij is a valid passphrase.
+abcde xyz ecdab is not valid - the letters from the third word can be rearranged to form the first word.
+a ab abc abd abf abj is a valid passphrase, because all letters need to be used when forming another word.
+iiii oiii ooii oooi oooo is valid.
+oiii ioii iioi iiio is not valid - any of these words can be rearranged to form any other word.
+Under this new system policy, how many passphrases are valid?
+
+*/
+function has_anagrams(s) {
+  var words = s.split(" ");
+  var set = new Set();
+  for (var i = 0; i < words.length; i++) {
+    var word = words[i].split("").sort().join("");
+    if (set.has(word)) {
+      return true;
+    }
+    set.add(word);
+  }
+  return false;
+}
+console.assert(!has_anagrams("abcde fghij"));
+console.assert(has_anagrams("abcde xyz ecdab"), "the letters from the third word can be rearranged to form the first word");
+console.assert(!has_anagrams("a ab abc abd abf abj"), "all letters need to be used when forming another word");
+console.assert(!has_anagrams("iiii oiii ooii oooi oooo"));
+console.assert(has_anagrams("oiii ioii iioi iiio"), "any of these words can be rearranged to form any other word");
+
+function count_valid2(input) {
+  var valid = 0;
+  for (var i = 0; i < input.length; i++) {
+    if (!has_anagrams(input[i])) {
+      valid++;
+    }
+  }
+  return valid;
+}
+count_valid2(day4input);
