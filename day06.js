@@ -67,3 +67,61 @@ function count_redistributions(initial_state) {
 console.assert(count_redistributions([0, 2, 7, 0]) === 5);
 
 count_redistributions(day6input);
+
+/*
+--- Part Two ---
+Out of curiosity, the debugger would also like to know the size of the loop: starting from a state that has already been seen, how many block redistribution cycles must be performed before that same state is seen again?
+
+In the example above, 2 4 1 2 is seen again after four cycles, and so the answer in that example would be 4.
+
+How many cycles are in the infinite loop that arises from the configuration in your puzzle input?
+*/
+
+function loop_size(initial_state) {
+  var banks = initial_state.slice(0); // make a mutable copy
+  var num_cycles = 0;
+  var configurations = new Set();
+
+  function is_new_configuration() {
+    var config = banks.join();
+    if (configurations.has(config)) {
+      return false;
+    }
+    configurations.add(config);
+    return true;
+  }
+
+  function cycle() {
+    var donors = Math.max(...banks);
+    var bank = 0;
+    while (banks[bank] != donors) {
+      bank++;
+    }
+    banks[bank] = 0;
+    while (donors > 0) {
+      bank++;
+      if (bank >= banks.length) {
+        bank = 0;
+      }
+      banks[bank]++;
+      donors--;
+    }
+    num_cycles++;
+  }
+
+  while (is_new_configuration()) {
+    cycle();
+  }
+
+  configurations = undefined;
+  var target_config = banks.join();
+  num_cycles = 0;
+  do {
+    cycle();
+  } while (banks.join() != target_config);
+  return num_cycles;
+}
+
+console.assert(loop_size([0, 2, 7, 0]) === 4);
+
+loop_size(day6input);
