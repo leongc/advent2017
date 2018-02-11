@@ -1130,3 +1130,34 @@ function run(program) {
 console.assert(run([0, 3, 0, 1, -3]) === 5);
 
 run(day5input);
+
+/*
+--- Part Two ---
+Now, the jumps are even stranger: after each jump, if the offset was three or more, instead decrease it by 1. Otherwise, increase it by 1 as before.
+
+Using this rule with the above example, the process now takes 10 steps, and the offset values after finding the exit are left as 2 3 2 3 -1.
+
+How many steps does it now take to reach the exit?
+*/
+function run2(program) {
+  var p = program.slice(0); // make a mutable copy
+  var pc = 0;
+  var steps = 0;
+  function step() {
+    var jump = p[pc];
+    if (jump >= 3) {
+      p[pc]--;
+    } else {
+      p[pc]++;
+    }
+    pc += jump;
+    steps++;
+  }
+  while (0 <= pc && pc < p.length) {
+    step();
+  }
+  return steps;
+}
+console.assert(run2([0, 3, 0, 1, -3]) === 10);
+
+run2(day5input);
