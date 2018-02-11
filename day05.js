@@ -1107,3 +1107,26 @@ const day5input = [
 -332,
 -193
 ];
+
+/**
+ * @param program is an array of int jump instructions
+ * @return number of steps to reach exit
+ */
+function run(program) {
+  var p = program.slice(0); // make a mutable copy
+  var pc = 0;
+  var steps = 0;
+  function step() {
+    var jump = p[pc]++;
+    pc += jump;
+    steps++;
+  }
+  while (0 <= pc && pc < p.length) {
+    step();
+  }
+  return steps;
+}
+
+console.assert(run([0, 3, 0, 1, -3]) === 5);
+
+run(day5input);
