@@ -41,7 +41,7 @@ const day2input = [
 
 function linediff(s) {
   var vals = s.split('\t');
-  if (vals.length == 0) {
+  if (vals.length === 0) {
     return 0;
   }
   var mi = parseInt(vals[0]);
@@ -58,21 +58,80 @@ function linediff(s) {
   return ma - mi;
 }
 
-linediff("5	1	9	5") == 8;
-linediff("7	5	3") == 4;
-linediff("2	4	6	8") == 6;
+console.assert(linediff("5	1	9	5") === 8);
+console.assert(linediff("7	5	3") === 4);
+console.assert(linediff("2	4	6	8") === 6);
 
-function checksum(input) {
+function checksum(input, sumfunction) {
   var result = 0;
   for (var i = 0; i < input.length; i++) {
-    result += linediff(input[i]);
+    result += sumfunction.call(this, input[i]);
   }
   return result;
 }
 
-checksum(["5	1	9	5",
+console.assert(checksum(["5	1	9	5",
   "7	5	3",
   "2	4	6	8",
-  ]) == 18;
+  ], linediff) === 18);
 
-checksum(day2input) == 21845;
+checksum(day2input, linediff);
+
+/*
+--- Part Two ---
+"Great work; looks like we're on the right track after all. Here's a star for your effort." However, the program seems a little worried. Can programs be worried?
+
+"Based on what we're seeing, it looks like all the User wanted is some information about the evenly divisible values in the spreadsheet. Unfortunately, none of us are equipped for that kind of calculation - most of us specialize in bitwise operations."
+
+It sounds like the goal is to find the only two numbers in each row where one evenly divides the other - that is, where the result of the division operation is a whole number. They would like you to find those numbers on each line, divide them, and add up each line's result.
+
+For example, given the following spreadsheet:
+
+5 9 2 8
+9 4 7 3
+3 8 6 5
+In the first row, the only two numbers that evenly divide are 8 and 2; the result of this division is 4.
+In the second row, the two numbers are 9 and 3; the result is 3.
+In the third row, the result is 2.
+In this example, the sum of the results would be 4 + 3 + 2 = 9.
+
+What is the sum of each row's result in your puzzle input?
+*/
+
+function linediv(s) {
+  var vals = s.split('\t');
+  if (vals.length === 0) {
+    return 0;
+  }
+  var candidates = [];
+  // assume exactly one pair exists
+  for (var i = 0; i < vals.length; i++) {
+    var v = parseInt(vals[i]);
+    for (var j = 0; j < candidates.length; j++) {
+      var c = candidates[j];
+      var n, d;
+      if (Math.abs(v) > Math.abs(c)) {
+        n = v;
+        d = c;
+      } else {
+        n = c;
+        d = v;
+      }
+      if (n % d === 0) {
+        return n / d;
+      }
+    }
+    candidates.push(v);
+  }
+  return 0;
+}
+
+console.assert(linediv("5	9	2	8") === 4);
+console.assert(linediv("9	4	7	3") === 3);
+console.assert(linediv("3	8	6	5") === 2);
+
+console.assert(checksum(["5	9	2	8",
+  "9	4	7	3",
+  "3	8	6	5"], linediv) === 9);
+
+checksum(day2input, linediv);
