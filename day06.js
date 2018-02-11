@@ -25,3 +25,45 @@ http://adventofcode.com/2017/day/6/input
 */
 
 const day6input = [4, 1, 15, 12, 0, 9, 9, 5, 5, 8, 7, 3, 14, 5, 12, 3];
+
+function count_redistributions(initial_state) {
+  var banks = initial_state.slice(0); // make a mutable copy
+  var num_cycles = 0;
+  var configurations = new Set();
+
+  function is_new_configuration() {
+    var config = banks.join();
+    if (configurations.has(config)) {
+      return false;
+    }
+    configurations.add(config);
+    return true;
+  }
+
+  function cycle() {
+    var donors = Math.max(...banks);
+    var bank = 0;
+    while (banks[bank] != donors) {
+      bank++;
+    }
+    banks[bank] = 0;
+    while (donors > 0) {
+      bank++;
+      if (bank >= banks.length) {
+        bank = 0;
+      }
+      banks[bank]++;
+      donors--;
+    }
+    num_cycles++;
+  }
+
+  while (is_new_configuration()) {
+    cycle();
+  }
+  return num_cycles;
+}
+
+console.assert(count_redistributions([0, 2, 7, 0]) === 5);
+
+count_redistributions(day6input);
