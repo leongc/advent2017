@@ -529,3 +529,31 @@ const day4input = [
 "dflx gdtb jyoj jyoj dflx aqhycgi xffnn",
 "inc mpys mzqmcwx vryz ibqrzc pmsy fat rojpxwy rcbqzi gjef"
 ];
+
+function has_duplicates(s) {
+  var words = s.split(" ");
+  var set = new Set();
+  for (var i = 0; i < words.length; i++) {
+    var word = words[i];
+    if (set.has(word)) {
+      return true;
+    }
+    set.add(word);
+  }
+  return false;
+}
+
+console.assert(!has_duplicates("aa bb cc dd ee"));
+console.assert(has_duplicates("aa bb cc dd aa"), "the word aa appears more than once");
+console.assert(!has_duplicates("aa bb cc dd aaa"), "aa and aaa count as different words");
+
+function count_valid(input) {
+  var valid = 0;
+  for (var i = 0; i < input.length; i++) {
+    if (!has_duplicates(input[i])) {
+      valid++;
+    }
+  }
+  return valid;
+}
+count_valid(day4input);
