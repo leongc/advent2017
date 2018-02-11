@@ -22,3 +22,52 @@ How many steps are required to carry the data from the square identified in your
 */
 
 const day3input = 289326;
+
+function spiral(n) {
+  var x = 0;
+  var y = 0;
+  var step = 1;
+  var heading_steps = 0;
+  var heading_max = 1;
+  function east() {
+    x += 1;
+  }
+  function north() {
+    y += 1;
+  }
+  function west() {
+    x -= 1;
+  }
+  function south() {
+    y -= 1;
+  }
+  var heading = east;
+
+  while (n > step) {
+    if (heading_steps >= heading_max) {
+      heading_steps = 0;
+      if (heading === east) {
+        heading = north;
+      } else if (heading === north) {
+        heading = west;
+        heading_max++;
+      } else if (heading === west) {
+        heading = south;
+      } else { // assume heading === south
+        heading = east;
+        heading_max++;
+      }
+    }
+    heading.apply(this);
+    step++;
+    heading_steps++;
+  }
+  return Math.abs(x) + Math.abs(y);
+}
+
+console.assert(spiral(1) === 0);
+console.assert(spiral(12) === 3);
+console.assert(spiral(23) === 2);
+console.assert(spiral(1024) === 31);
+
+spiral(day3input);
