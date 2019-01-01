@@ -1049,3 +1049,29 @@ const day8input = [
 "fw dec -971 if fz < 1922"
 ];
 console.log(processInput(day8input));
+
+/*
+--- Part Two ---
+To be safe, the CPU also needs to know the highest value held in any register during this process so that it can decide how much memory to allocate to these operations. For example, in the above instructions, the highest value ever held was 10 (in register c after the third instruction was evaluated).
+*/
+function processInput2(lines) {
+  var registers = new Map();
+  var maxValue = -Infinity;
+  function get(register) {
+    return registers.has(register) ? registers.get(register) : 0;
+  }
+  for (let line of lines) {
+    var [_, modReg, op, amountString, condReg, comparator, valueString] = 
+        line.match(/^([a-z]+) (inc|dec) (-?\d+) if ([a-z]+) ([!<=>]=?) (-?\d+)$/);
+    if (eval(get(condReg) + comparator + valueString)) {
+      var oldRegVal = get(modReg);
+      var amount = parseInt(amountString);
+      var newRegVal = (op == "inc") ? (oldRegVal + amount) : (oldRegVal - amount);
+      registers.set(modReg, newRegVal);
+      maxValue = Math.max(maxValue, newRegVal);
+    } 
+  }
+  return maxValue;
+}
+console.assert(processInput2(testInput) == 10);
+console.log(processInput2(day8input));
